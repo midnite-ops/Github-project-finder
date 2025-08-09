@@ -1,0 +1,75 @@
+.finder{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    .top{
+        @extend .finder;
+        align-items: center;
+        flex-direction: row;
+        .top-box{
+            width: 12%;
+            border-radius: 10px;
+            height: 50px;
+            background-color: black;
+            
+        }
+    }
+    .center{
+        .accordion-button{
+            background-color: transparent;
+            border-color: transparent;
+            &:focus{
+                outline: none;
+                box-shadow: none;
+            }   
+        }
+        .accordion-body{
+            overflow-y: auto;
+            height: 100px;
+            ul{
+                padding: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                li{
+                    list-style-type: none;
+                    border-bottom: 1px solid rgb(214, 214, 214);
+                    padding: 10px 0px;
+                     padding-left: 10px;
+                    &:hover{
+                        background-color: rgb(241, 241, 241);
+                        border-radius: 5px;
+                        border: none;
+                        transition: 0.5ms ease-in;
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+    }
+    .bottom{
+        width: 100%;
+        cursor: pointer;
+        p{
+            margin: 0;
+        }
+        .bottom-text{
+            height: 150px;
+            background-color: rgb(211, 211, 211);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center; 
+            &.error-text{
+                flex-direction: column;
+                background-color: rgb(217, 140, 140);
+            }   
+        }
+        .retry-btn{
+            border: none;
+            padding: 10px 0px;
+            width: 100%;
+        }
+    }
+}
