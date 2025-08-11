@@ -63,13 +63,54 @@
             justify-content: center; 
             &.error-text{
                 flex-direction: column;
-                background-color: rgb(217, 140, 140);
+                background-color: rgb(175, 53, 53);
+                color: white;
             }   
+        }
+        .bottom-repo{
+            border: 1px solid black;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            border-radius: 12px;
+            padding: 15px;
+            h5{
+                margin: 0;
+            }
+            .bottom-repo-info{
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: nowrap;
+                div{
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                    img{
+                        width: 20px;
+                    }
+                    div{
+                        width: 10px;
+                        height: 10px;
+                        background-color: yellow;
+                        border-radius: 5px;
+                        
+                    }
+                }
+            }
         }
         .retry-btn{
             border: none;
+            margin-top: 20px;
+            border-radius: 12px;
             padding: 10px 0px;
             width: 100%;
+            background-color: rgb(175, 53, 53); 
+            color: white
+        }
+        .refresh-btn{
+            @extend .retry-btn;
+            background-color: black;
         }
     }
 }

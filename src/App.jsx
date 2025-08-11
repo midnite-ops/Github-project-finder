@@ -1,13 +1,18 @@
 import { useEffect, useState } from 'react'
+import forks from './assets/forks.svg';
+import stars from './assets/star.svg'
+import issues from './assets/issues.svg'
 import './App.scss'
 import { use } from 'react'
 
 function App() {
   const [allLanguages, setAllLanguages] = useState([])
+  const [allLanguagesError, setAllLanguagesError] = useState(false)
+  const [allLanguagesMessage, setAllLanguagesMessage] = useState('Loading languages...')
   const [repositories, setRepositories] = useState([])
   const [error, setError] = useState(false)
   const [isEmpty, setIsEmpty] = useState(true)
-  const [language, setLanguage] = useState()
+  const [language, setLanguage] = useState('Select a language')
   const [message, setMessage] = useState('Please select a language')
   const [selectedRepo, setSelectedRepo] = useState({})
   useEffect(() => {
@@ -20,7 +25,8 @@ function App() {
     })
     .then(data => setAllLanguages(data))
     .catch((error) => {
-      console.log('fsafd')
+      setAllLanguagesError(true)
+      setAllLanguagesMessage('Error fetching languages, please check your connection and try again')
     })
   }, [])
 
@@ -32,32 +38,36 @@ function App() {
     }
   }, [repositories])
 
-  function fetchLanguage(event){
-    const value = event.target.textContent
+  function fetchLanguage(value){
+    console.log(value)
+    setError(false);
+    setIsEmpty(true);
+    setMessage('Loading please wait....');
+
     fetch(`https://api.github.com/search/repositories?q=language:${value}`)
-    .then((res) => {
-      if(!res.ok){
-        throw new Error
-      }
-      return res.json()
-    })
-    .then(data => setRepositories(data.items))
-    .catch((error) => {
-      setMessage('Error fetching repositories')
-      setError(true)
-    })
-    setLanguage(value)
-    setMessage('Loading please wait....')
-  }
-  function handleRender(){
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to fetch repositories");
+        }
+        return res.json();
+      })
+      .then(data => setRepositories(data.items))
+      .catch(error => {
+        console.error(error);
+        setMessage('Error fetching repositories');
+        setError(true);
+      });
+    
+  } function handleRender(){
     const random =  Math.floor(Math.random() * repositories.length)
     const randomRepo = repositories[random]
+    console.log(randomRepo.forks)
     setSelectedRepo(
       {
-        title: randomRepo.title,
-        description: randomRepo.description,
-        forks: randomRepo.forks,
-        issues: randomRepo.issues,
+        title: randomRepo.name, description: randomRepo.description === null ? 'No description available' : randomRepo.description,
+        forks: randomRepo.forks_count,
+        issues: randomRepo.open_issues_count,
+        stars: randomRepo.stargazers_count,
         language: randomRepo.language
       }
     )
@@ -72,46 +82,68 @@ function App() {
         <div className="accordion-item">
           <h2 className="accordion-header">
             <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-              {language ? `Language: ${language}` : 'Select a Language'}
+              {language}
             </button>
           </h2>
           <div id="collapseOne" className="accordion-collapse collapse" data-bs-parent="#accordionExample">
             <div className="accordion-body">
-              {}
-              <ul>
-                {
-                  allLanguages.map((item, index) => (
-                    item.title === 'All Languages' ? null : <li key={index} onClick={fetchLanguage}>{item.title}</li>
-                  ))
-                }
-              </ul>
+              {allLanguagesError && (<p>{allLanguagesMessage}</p>)}
+              {!allLanguagesError && (
+                <ul>
+                  {
+                    allLanguages.map((item, index) => (
+                      item.title === 'All Languages' ? null : <li key={index} onClick={() => {
+                        fetchLanguage(item.title)
+                        setLanguage(item.title)
+                      }} href='#collapseOne' data-bs-toggle="collapse">{item.title}</li>
+                    ))
+                  }
+                </ul>
+              )}
+             
             </div>
           </div>
         </div>
       </div>
       <div className="bottom">
         {isEmpty && (
-          <div className={`bottom-text ${isEmpty ? 'error-text' : ''}`}>
-            <p>{message}</p>
-            {isEmpty && (
-              <button className='retry-btn'>Click to retry</button>
+          <>
+            <div className={`bottom-text ${error ? 'error-text' : ''}`}>
+              <p>{message}</p>
+            </div>
+            {error && (
+              <button className='retry-btn' onClick={() => {fetchLanguage(language)}}>Click to retry</button>
             )}
-          </div>
+          </>
+          
         )}
         {!isEmpty && (
-          <div className='bottom-repo'>
-            <h3>{selectedRepo.title}</h3>
-            <p>{selectedRepo.description}</p>
-            <div className="bottom-repo-info">
-              <div>
-                <div></div>
-                <p>{selectedRepo.language}</p>
-                <p>{selectedRepo.stars}</p>
-                <p>{selectedRepo.forks}</p>
-                <p>{selectedRepo.issues}</p>
+          <>
+            <div className='bottom-repo'>
+              <h5>{selectedRepo.title}</h5>
+              <p>{selectedRepo.description}</p>
+              <div className="bottom-repo-info">
+                <div>
+                  <div></div>
+                  <p>{selectedRepo.language}</p>
+                </div>
+                <div>
+                  <img src={stars} alt="an icon of stars" />
+                  <p>{selectedRepo.stars}</p>
+                </div>
+                <div>
+                  <img src={forks} alt="an icon of a fork" />
+                  <p>{selectedRepo.forks}</p>
+                </div>
+                <div>
+                  <img src={issues} alt="an icon of issues" />
+                  <p>{selectedRepo.issues}</p>
+                </div>
               </div>
             </div>
-          </div>
+            <button className='refresh-btn' onClick={handleRender}>Refresh</button>
+          </>
+          
         )}
         
       </div>
