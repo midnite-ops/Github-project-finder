@@ -1,6 +1,6 @@
 ## What i learnt from this project
 
-As a developer, learning new concepts or syntax can most times be scary but thats why building projects is always the right step. In this project i used my knowledge of fetching APIs to create an application where users can search for github repositories, i learnt several concepts like 'try and catch, async and await' but although in did'nt use them in the project, i understood their importance when dealing with asynchronous code. On to the next.
+As a developer, learning new concepts or syntax can most times be scary but thats why building projects is always the right step. In this project i used my knowledge of fetching APIs to create an application where users can search for github repositories, i learnt several concepts like 'try and catch, async and await' but although in did'nt use them in the project, i understood their importance when dealing with asynchronous code. On to the next. Here is the link to the project https://github-project-finder.vercel.app/
 
 
 # React + Vite
